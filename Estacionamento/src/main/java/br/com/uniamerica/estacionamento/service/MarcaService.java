@@ -2,7 +2,10 @@ package br.com.uniamerica.estacionamento.service;
 
 import br.com.uniamerica.estacionamento.entity.Marca;
 import br.com.uniamerica.estacionamento.repository.MarcaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,6 +46,18 @@ public class MarcaService {
             marcaRepository.delete(marcaExistente);
             return true;
         }
+    }
+
+    public void delete(Long id) {
+        Marca marca = marcaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Marca não encontrada"));
+        marcaRepository.delete(marca);
+    }
+}
+@Configuration
+class AppConfig {
+    @Bean
+    public Marca marca() {
+        return new Marca();
     }
 }
 

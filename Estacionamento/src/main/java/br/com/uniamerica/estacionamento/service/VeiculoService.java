@@ -52,7 +52,7 @@ public class VeiculoService {
             Veiculo veiculo = new Veiculo();
             veiculo.setPlaca(placa);
             veiculo.setModelo(modelo);
-            veiculo.setCor(Cor.valueOf(cor));
+            veiculo.setCor(String.valueOf(Cor.valueOf(cor)));
             veiculo.setTipo(tipo);
             veiculo.setAnoModelo(anoModelo);
             return veiculoRepository.save(veiculo);

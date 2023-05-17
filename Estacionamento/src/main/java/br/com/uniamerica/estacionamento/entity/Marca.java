@@ -1,18 +1,22 @@
 package br.com.uniamerica.estacionamento.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+
+import java.util.List;
+
 @Entity
 @Table(name = "marcas", schema = "public")
 public class Marca extends AbstractEntity {
     @Getter @Setter
-    @Column(name = "nome_marca",nullable = false, unique = true , length = 15)
+    @Column(name = "nome_marca", nullable = false, unique = true, length = 15)
     private String nomeMarca;
 
+    @OneToMany(mappedBy = "marca")
+    private List<Modelo> modelos;
+
 }
+

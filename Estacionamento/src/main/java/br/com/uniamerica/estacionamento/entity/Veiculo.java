@@ -8,17 +8,19 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 @Entity
 @Table(name = "veiculos", schema = "public")
-public class Veiculo extends AbstractEntity{
-    @Getter @Setter
-    @Column(name = "placa", nullable = false, unique = true, length = 10)
-    private String placa;
-    @Getter @Setter
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "modelo",unique = true, nullable = false)
+public class Veiculo extends AbstractEntity {
+
+    @Getter
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "modelo_id", nullable = false)
     private Modelo modelo;
-    @Getter @Setter
-    @Column(name = "cor",nullable = false)
-    private Cor cor;
+
+    @Getter
+    @Setter
+    @Column(name = "placa", nullable = false, length = 8)
+    private String placa;
+
     @Getter @Setter
     @Column(name = "tipo", nullable = false)
     private Tipo tipo;
@@ -26,8 +28,19 @@ public class Veiculo extends AbstractEntity{
     @Column(name = "ano_modelo", nullable = false, length = 5)
     private int anoModelo;
 
+    @Getter
+    @Setter
+    @Column(name = "cor", nullable = false, length = 15)
+    private String cor;
+
     @Getter @Setter
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "movimentacao_veiculo")
     private Movimentacao movimentacao;
+
+    public Movimentacao getMovimentacao() {
+        return this.movimentacao;
+    }
+
+    // outros atributos e métodos
 }

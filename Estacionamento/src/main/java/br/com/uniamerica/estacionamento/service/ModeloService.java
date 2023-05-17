@@ -17,6 +17,9 @@ public class ModeloService {
     @Autowired
     private MarcaService marcaService;
 
+    @Autowired
+    private Marca marca;
+
     public List<Modelo> buscarModelos() {
         return modeloRepository.findAll();
     }
@@ -25,14 +28,12 @@ public class ModeloService {
         return modeloRepository.findById(id).orElse(null);
     }
 
-    public Modelo criarModelo(Modelo novoModelo) {
-        Marca marca = marcaService.buscarMarcaPorId(novoModelo.getMarca().getId());
-        if (marca == null) {
-            return null;
-        } else {
-            novoModelo.setMarca(marca);
-            return modeloRepository.save(novoModelo);
-        }
+    public Modelo criarModelo(String nomeModelo, Marca marca, boolean ativo) {
+        Modelo modelo = new Modelo();
+        modelo.setNomeModelo(nomeModelo);
+        modelo.setMarca(marca);
+        modelo.setAtivo(ativo);
+        return modeloRepository.save(modelo);
     }
 
     public Modelo atualizarModelo(Long id, Modelo modeloAtualizado) {

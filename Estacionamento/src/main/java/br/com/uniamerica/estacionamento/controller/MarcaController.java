@@ -1,7 +1,8 @@
-/*package br.com.uniamerica.estacionamento.controller;
+package br.com.uniamerica.estacionamento.controller;
 
 import br.com.uniamerica.estacionamento.entity.*;
 import br.com.uniamerica.estacionamento.repository.MarcaRepository;
+import br.com.uniamerica.estacionamento.service.MarcaService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,14 @@ import java.util.Optional;
 @RequestMapping("/api/marca")
 public class MarcaController {
 
-    @Autowired
-    MarcaRepository marcaRepository;
+    private final MarcaService marcaService;
+    private final MarcaRepository marcaRepository;
 
+    @Autowired
+    public MarcaController(MarcaService marcaService, MarcaRepository marcaRepository) {
+        this.marcaService = marcaService;
+        this.marcaRepository = marcaRepository;
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Marca> findById(@PathVariable Long id){
         return ResponseEntity.ok().body(this.marcaRepository.findById(id).orElse(new Marca()));
@@ -60,24 +66,10 @@ public class MarcaController {
         return ResponseEntity.ok().body("Registro atualizado com sucesso");
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletar(@PathVariable Long id) {
-        Optional<Marca> optionalMarca = marcaRepository.findById(id);
-
-        if (optionalMarca.isPresent()) {
-            Marca marca = optionalMarca.get();
-            Movimentacao movimentacao = marca.getModelo().getVeiculo().getMovimentacao().getCondutor().getMovimentacao() ;
-
-            if (movimentacao.isAtivo()) {
-                marcaRepository.delete(marca);
-                return ResponseEntity.ok("O registro da marca foi deletado com sucesso");
-            } else {
-                marca.setAtivo(false);
-                marcaRepository.save(marca);
-                return ResponseEntity.ok("a marca estava vinculado a uma ou mais movimentações e foi desativado com sucesso");
-            }
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        marcaService.delete(id);
+        return ResponseEntity.noContent().build();
     }
+
+
 }
-*/
