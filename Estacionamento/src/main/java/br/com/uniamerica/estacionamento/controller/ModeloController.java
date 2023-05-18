@@ -1,8 +1,10 @@
 package br.com.uniamerica.estacionamento.controller;
 
 import br.com.uniamerica.estacionamento.entity.*;
+import br.com.uniamerica.estacionamento.repository.MarcaRepository;
 import br.com.uniamerica.estacionamento.repository.ModeloRepository;
 import br.com.uniamerica.estacionamento.repository.VeiculoRepository;
+import jakarta.validation.Valid;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,9 @@ public class ModeloController {
 
     @Autowired
     ModeloRepository modeloRepository;
+
+    @Autowired
+    MarcaRepository marcaRepository;
 
     @Autowired
     VeiculoRepository veiculoRepository;
@@ -49,13 +54,13 @@ public class ModeloController {
     }
 
     @PostMapping
-    public ResponseEntity<?> cadastrar(@RequestBody Modelo modelo) {
+    public ResponseEntity<?> cadastrar(@RequestBody @Valid Modelo modelo) {
         this.modeloRepository.save(modelo);
         return ResponseEntity.ok().body("Registro cadastrado com sucesso");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizar(@PathVariable final @NotNull Long id, @RequestBody final Modelo modelo) {
+    public ResponseEntity<?> atualizar(@PathVariable final @NotNull Long id, @RequestBody @Valid final Modelo modelo) {
         if (id.equals(modelo.getId()) && !this.modeloRepository.findById(id).isEmpty()) {
             this.modeloRepository.save(modelo);
         } else {

@@ -14,4 +14,7 @@ public interface ModeloRepository extends JpaRepository<Modelo, Long> {
 
     @Query("From Modelo where ativo = :ativo")
     public List<Modelo> findByAtivo(@Param("ativo")final boolean ativo);
+
+    boolean existsByNomeModelo(String nomeModelo);
+    Modelo findByNomeModelo(String nomeModelo);
 }

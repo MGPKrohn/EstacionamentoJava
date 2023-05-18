@@ -12,8 +12,8 @@ public class Veiculo extends AbstractEntity {
 
     @Getter
     @Setter
-    @ManyToOne
-    @JoinColumn(name = "modelo_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "nome_modelo", nullable = false)
     private Modelo modelo;
 
     @Getter
@@ -42,5 +42,4 @@ public class Veiculo extends AbstractEntity {
         return this.movimentacao;
     }
 
-    // outros atributos e métodos
 }
