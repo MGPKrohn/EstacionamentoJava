@@ -38,15 +38,16 @@ public class ModeloService {
 
     public Modelo atualizarModelo(Long id, Modelo modeloAtualizado) {
         Modelo modeloExistente = modeloRepository.findById(id).orElse(null);
-        Marca marcaAtualizada = marcaService.buscarMarcaPorId(modeloAtualizado.getMarca().getId());
-        if (modeloExistente == null || marcaAtualizada == null) {
+        if (modeloExistente == null) {
             return null;
-        } else {
-            modeloExistente.setNomeModelo(modeloAtualizado.getNomeModelo());
-            modeloExistente.setMarca(marcaAtualizada);
-            return modeloRepository.save(modeloExistente);
-        }
+        }else{
+
+        modeloExistente.setNomeModelo(modeloAtualizado.getNomeModelo());
+        return modeloRepository.save(modeloExistente);
     }
+    }
+
+
 
     public boolean excluirModelo(Long id) {
         Modelo modeloExistente = modeloRepository.findById(id).orElse(null);

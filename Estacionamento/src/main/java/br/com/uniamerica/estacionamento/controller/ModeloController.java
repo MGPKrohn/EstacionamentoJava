@@ -63,7 +63,7 @@ public class ModeloController {
         this.modeloRepository.save(modelo);
         return ResponseEntity.ok().body("Registro cadastrado com sucesso");
     }
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<?> atualizar(@PathVariable final @NotNull Long id, @RequestBody final Modelo modelo) {
         Optional<Modelo> modeloExistente = modeloRepository.findById(id);
 
