@@ -3,11 +3,14 @@ package br.com.uniamerica.estacionamento.controller;
 import br.com.uniamerica.estacionamento.entity.*;
 import br.com.uniamerica.estacionamento.repository.MarcaRepository;
 import br.com.uniamerica.estacionamento.repository.ModeloRepository;
+import br.com.uniamerica.estacionamento.repository.MovimentacaoRepository;
 import br.com.uniamerica.estacionamento.repository.VeiculoRepository;
+import br.com.uniamerica.estacionamento.service.ModeloService;
 import jakarta.validation.Valid;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +21,8 @@ import java.util.Optional;
 @RequestMapping("/api/modelo")
 public class ModeloController {
 
+    @Autowired
+    ModeloService modeloService;
     @Autowired
     ModeloRepository modeloRepository;
 
@@ -58,37 +63,48 @@ public class ModeloController {
         this.modeloRepository.save(modelo);
         return ResponseEntity.ok().body("Registro cadastrado com sucesso");
     }
+    @PutMapping
+    public ResponseEntity<?> atualizar(@PathVariable final @NotNull Long id, @RequestBody final Modelo modelo) {
+        Optional<Modelo> modeloExistente = modeloRepository.findById(id);
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> atualizar(@PathVariable final @NotNull Long id, @RequestBody @Valid final Modelo modelo) {
-        if (id.equals(modelo.getId()) && !this.modeloRepository.findById(id).isEmpty()) {
-            this.modeloRepository.save(modelo);
+        if (modeloExistente.isPresent()) {
+
+            Modelo modeloAtualizado = modeloExistente.get();
+
+
+            modeloService.atualizarModelo(modeloAtualizado.getId(), modelo);
+
+            return ResponseEntity.ok().body("Registro atualizado com sucesso");
         } else {
-            return ResponseEntity.badRequest().body("Id nao foi encontrado");
+
+            return ResponseEntity.badRequest().body("ID não encontrado");
         }
-        return ResponseEntity.ok().body("Registro atualizado com sucesso");
     }
+
+
+
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletar(@PathVariable Long id) {
         Optional<Modelo> optionalModelo = modeloRepository.findById(id);
         Optional<Veiculo> optionalVeiculo = veiculoRepository.findById(id);
 
-        if (optionalModelo.isPresent() && optionalVeiculo.isPresent()) {
-            Veiculo veiculo = optionalVeiculo.get();
+        if (optionalModelo.isPresent()) {
             Modelo modelo = optionalModelo.get();
-            Modelo modelov = veiculo.getModelo();
-            Movimentacao movimentacao = veiculo.getMovimentacao();
 
-            if (movimentacao.isAtivo() && modelo != (modelov)) {
+            if (modelo.isAtivo()) {
                 modeloRepository.delete(modelo);
                 return ResponseEntity.ok("O registro do modelo foi deletado com sucesso");
             } else {
                 modelo.setAtivo(false);
-                modeloRepository.save(modelo);
+                modeloRepository.delete(modelo);
                 return ResponseEntity.ok("O modelo estava vinculado a uma ou mais movimentações e foi desativado com sucesso");
             }
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
+
 }
