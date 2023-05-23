@@ -23,6 +23,7 @@ public class Movimentacao extends AbstractEntity{
     @JoinColumn(name = "veiculo_id", nullable = false)
     private Veiculo veiculo;
     @Getter @Setter
+    @NotBlank(message = "O campo de Data Entrada Deve ser preenchido")
     @Column(name = "data_entrada",nullable = false)
     private LocalDateTime dataEntrada;
     @Getter @Setter
@@ -41,6 +42,7 @@ public class Movimentacao extends AbstractEntity{
     @Column(name = "valor_desconto")
     private BigDecimal valorDesconto;
     @Getter @Setter
+    @NotBlank(message = "o Valor Hora deve ser preenchido")
     @Column(name = "valor_hora",nullable = false)
     private BigDecimal valorHora;
     @Getter @Setter

@@ -32,7 +32,7 @@ public class Veiculo extends AbstractEntity {
     @Getter @Setter
     @NotBlank(message = "O campo de ano modelo deve ser preenchido")
     @Pattern(regexp = "\\d{4}", message = "O campo de ano modelo deve conter apenas dígitos com 4 caracteres")
-    @Column(name = "ano_modelo", nullable = false, length = 5)
+    @Column(name = "ano_modelo", nullable = false, length = 4)
     private int anoModelo;
 
     @Getter
