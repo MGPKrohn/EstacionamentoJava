@@ -1,9 +1,6 @@
 package br.com.uniamerica.estacionamento.service;
 
-import br.com.uniamerica.estacionamento.entity.Cor;
-import br.com.uniamerica.estacionamento.entity.Modelo;
-import br.com.uniamerica.estacionamento.entity.Tipo;
-import br.com.uniamerica.estacionamento.entity.Veiculo;
+import br.com.uniamerica.estacionamento.entity.*;
 import br.com.uniamerica.estacionamento.repository.VeiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +53,19 @@ public class VeiculoService {
             veiculo.setTipo(tipo);
             veiculo.setAnoModelo(anoModelo);
             return veiculoRepository.save(veiculo);
+        }
+    }
+    public Veiculo atualizarVeiculo(Long id, Veiculo veiculoAtualizada) {
+        Veiculo veiculoExistente = veiculoRepository.findById(1L).orElse(null);
+        if (veiculoExistente == null) {
+            return null;
+        } else {
+            veiculoExistente.setAnoModelo(veiculoAtualizada.getAnoModelo());
+            veiculoExistente.setCor(veiculoAtualizada.getCor());
+            veiculoExistente.setTipo(veiculoAtualizada.getTipo());
+            veiculoExistente.setModelo(veiculoAtualizada.getModelo());
+            veiculoExistente.setPlaca(veiculoAtualizada.getPlaca());
+            return veiculoRepository.save(veiculoExistente);
         }
     }
 

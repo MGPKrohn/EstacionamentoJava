@@ -144,5 +144,27 @@ public class MovimentacaoService {
         } else {
             return null;
         }
-    }}
+    }
+
+    public Movimentacao atualizarMovimentacao(Long id, Movimentacao movimentacaoAtualizado) {
+        Movimentacao movimentacaoExistente = movimentacaoRepository.findById(id).orElse(null);
+        if (movimentacaoExistente == null) {
+            return null;
+        } else {
+            movimentacaoExistente.setCondutor(movimentacaoAtualizado.getCondutor());
+            movimentacaoExistente.setTempo(movimentacaoAtualizado.getTempo());
+            movimentacaoExistente.setDataEntrada(movimentacaoAtualizado.getDataEntrada());
+            movimentacaoExistente.setDataSaida(movimentacaoAtualizado.getDataSaida());
+            movimentacaoExistente.setVeiculo(movimentacaoAtualizado.getVeiculo());
+            movimentacaoExistente.setTempoDesconto(movimentacaoAtualizado.getTempoDesconto());
+            movimentacaoExistente.setTempoMulta(movimentacaoAtualizado.getTempoMulta());
+            movimentacaoExistente.setValorDesconto(movimentacaoAtualizado.getValorDesconto());
+            movimentacaoExistente.setValorHora(movimentacaoAtualizado.getValorHora());
+            movimentacaoExistente.setValorTotal(movimentacaoAtualizado.getValorTotal());
+            movimentacaoExistente.setValorMulta(movimentacaoAtualizado.getValorMulta());
+            movimentacaoExistente.setValorHoraMulta(movimentacaoAtualizado.getValorHoraMulta());
+            return movimentacaoRepository.save(movimentacaoExistente);
+        }
+    }
+}
 
