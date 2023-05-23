@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -52,7 +54,24 @@ public class MovimentacaoController {
     @PostMapping
     public ResponseEntity<?> cadastrar(@RequestBody Movimentacao movimentacao) {
         this.movimentacaoRepository.save(movimentacao);
-        return ResponseEntity.ok().body("Registro cadastrado com sucesso");
+
+
+        // Criar um objeto contendo as informações desejadas
+        Map<String, Object> response = new HashMap<>();
+        response.put("condutor:", movimentacao.getCondutor());
+        response.put("veiculo:", movimentacao.getVeiculo());
+        response.put("dataEntrada:", movimentacao.getDataEntrada());
+        response.put("dataSaida:", movimentacao.getDataSaida());
+        response.put("tempo:", movimentacao.getTempo());
+        response.put("tempoDesconto:", movimentacao.getTempoDesconto());
+        response.put("tempoMulta:", movimentacao.getTempoMulta());
+        response.put("valorDesconto:", movimentacao.getValorDesconto());
+        response.put("valorHora:", movimentacao.getValorHora());
+        response.put("valorTotal:", movimentacao.getValorTotal());
+        response.put("valorMulta:", movimentacao.getValorMulta());
+        response.put("valorHoraMulta:", movimentacao.getValorHoraMulta());
+
+        return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/{id}")
