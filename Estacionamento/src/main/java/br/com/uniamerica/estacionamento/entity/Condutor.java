@@ -14,6 +14,7 @@ import java.time.LocalTime;
 public class Condutor extends AbstractEntity{
     @Getter @Setter
     @NotBlank(message = "o campo do nome do condutor deve ser preenchido")
+    @Length(max = 100, message = "o campo deve ter até no maximo 100 caracteres")
     @Column(name = "nome", nullable = false, length = 100)
     private String nomeCondutor;
     @Getter @Setter
