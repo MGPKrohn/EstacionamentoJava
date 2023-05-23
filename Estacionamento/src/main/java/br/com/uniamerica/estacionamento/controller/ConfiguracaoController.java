@@ -28,7 +28,7 @@ public class ConfiguracaoController {
         return ResponseEntity.ok().body(this.configuracaoRepository.findById(id));
     }
 
-    @GetMapping("/{ativo}")
+    @GetMapping("/ativo/{ativo}")
     public ResponseEntity<?> findByAtivo(@PathVariable boolean ativo){
         List<Configuracao> configuracoes = this.configuracaoRepository.findByAtivo(ativo);
 

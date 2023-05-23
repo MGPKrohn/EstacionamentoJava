@@ -27,11 +27,19 @@ public class CondutorController {
     private MovimentacaoRepository movimentacaoRepository;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id){
-        return ResponseEntity.ok().body(this.condutorRepository.findById(id));
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        Optional<Condutor> condutorOptional = condutorRepository.findById(id);
+
+        if (condutorOptional.isPresent()) {
+            Condutor condutor = condutorOptional.get();
+            return ResponseEntity.ok(condutor);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @GetMapping("/{ativo}")
+
+    @GetMapping("/ativo/{ativo}")
     public ResponseEntity<?> findByAtivo(@PathVariable boolean ativo){
         List<Condutor> condutores = this.condutorRepository.findByAtivo(ativo);
 
