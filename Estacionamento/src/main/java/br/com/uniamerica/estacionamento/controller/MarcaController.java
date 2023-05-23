@@ -4,9 +4,11 @@ import br.com.uniamerica.estacionamento.entity.*;
 import br.com.uniamerica.estacionamento.repository.MarcaRepository;
 import br.com.uniamerica.estacionamento.repository.ModeloRepository;
 import br.com.uniamerica.estacionamento.repository.VeiculoRepository;
+import br.com.uniamerica.estacionamento.service.MarcaService;
 import jakarta.validation.Valid;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +19,8 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/api/marca")
 public class MarcaController {
-
+    @Autowired
+    MarcaService marcaService;
     @Autowired
     MarcaRepository marcaRepository;
     @Autowired
@@ -58,37 +61,32 @@ public class MarcaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizar(@PathVariable final @NotNull Long id, @RequestBody @Valid final Marca marca) {
-        if (id.equals(marca.getId()) && !this.marcaRepository.findById(id).isEmpty()) {
-            this.marcaRepository.save(marca);
-        } else {
-            return ResponseEntity.badRequest().body("Id nao foi encontrado");
-        }
-        return ResponseEntity.ok().body("Registro atualizado com sucesso");
-    }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletar(@PathVariable Long id) {
-        Optional<Marca> optionalMarca = marcaRepository.findById(id);
-        Optional<Modelo> optionalModelo = modeloRepository.findById(id);
-        Optional<Veiculo> optionalVeiculo = veiculoRepository.findById(id);
+    public ResponseEntity<?> atualizar(@PathVariable final @NotNull Long id, @RequestBody final Marca marca) {
+        Optional<Marca> marcaExiste = marcaRepository.findById(id);
 
-        if (optionalMarca.isPresent() && optionalModelo.isPresent() && optionalVeiculo.isPresent()) {
-            Veiculo veiculo = optionalVeiculo.get();
-            Marca marca = optionalMarca.get();
-            Modelo modelo = optionalModelo.get();
-            Marca marca1 = veiculo.getModelo().getMarca();
-            Movimentacao movimentacao = veiculo.getMovimentacao();
+        if (marcaExiste.isPresent()) {
 
-            if (movimentacao.isAtivo() && marca != (marca1)) {
-                marcaRepository.delete(marca);
-                return ResponseEntity.ok("O registro da marca foi deletado com sucesso");
-            } else {
-                marca.setAtivo(false);
-                marcaRepository.save(marca);
-                return ResponseEntity.ok("A marca estava vinculada a uma ou mais movimentações e foi desativada com sucesso");
-            }
+            Marca marcaAtualizado = marcaExiste.get();
+
+
+            marcaService.atualizarMarca(marcaAtualizado.getId(), marca);
+
+            return ResponseEntity.ok().body("Registro atualizado com sucesso");
         } else {
-            return ResponseEntity.notFound().build();
+
+            return ResponseEntity.badRequest().body("ID não encontrado");
         }
     }
+    @DeleteMapping
+    public ResponseEntity<?> deletar (@RequestParam("id") final Long id){
+        final Marca marcaBanco = this.marcaRepository.findById(id).orElse(null);
+
+        try{
+            this.marcaService.deletar(marcaBanco);
+            return ResponseEntity.ok("Registro deletado");
+        }catch (RuntimeException erro){
+            return ResponseEntity.internalServerError().body("Erro"+erro.getMessage());
+        }
+    }
+
 }

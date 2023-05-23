@@ -15,7 +15,7 @@ public class ConfiguracaoService {
         return configuracaoRepository.findById(1L).orElse(null);
     }
 
-    public Configuracao atualizarConfiguracao(Configuracao configuracaoAtualizada) {
+    public Configuracao atualizarConfiguracao(Long id, Configuracao configuracaoAtualizada) {
         Configuracao configuracaoExistente = configuracaoRepository.findById(1L).orElse(null);
         if (configuracaoExistente == null) {
             return null;

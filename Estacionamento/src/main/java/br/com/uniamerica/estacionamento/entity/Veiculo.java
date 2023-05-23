@@ -13,7 +13,7 @@ public class Veiculo extends AbstractEntity {
     @Getter
     @Setter
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "nome_modelo", nullable = false)
+    @JoinColumn(name = "modelo_id", nullable = false)
     private Modelo modelo;
 
     @Getter
@@ -35,7 +35,7 @@ public class Veiculo extends AbstractEntity {
 
     @Getter @Setter
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "movimentacao_veiculo")
+    @JoinColumn(name = "movimentaoca_id")
     private Movimentacao movimentacao;
 
     public Movimentacao getMovimentacao() {

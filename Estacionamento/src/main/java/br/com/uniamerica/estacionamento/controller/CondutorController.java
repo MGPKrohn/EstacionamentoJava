@@ -4,6 +4,8 @@ import br.com.uniamerica.estacionamento.entity.Condutor;
 import br.com.uniamerica.estacionamento.entity.Configuracao;
 import br.com.uniamerica.estacionamento.entity.Movimentacao;
 import br.com.uniamerica.estacionamento.repository.CondutorRepository;
+import br.com.uniamerica.estacionamento.repository.MovimentacaoRepository;
+import br.com.uniamerica.estacionamento.service.CondutorService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,11 @@ import java.util.Optional;
 public class CondutorController {
 
     @Autowired
+    CondutorService condutorService;
+    @Autowired
     CondutorRepository condutorRepository;
+    @Autowired
+    private MovimentacaoRepository movimentacaoRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id){
@@ -55,13 +61,22 @@ public class CondutorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizar(@PathVariable final @NotNull Long id, @RequestBody final Condutor condutor) {
-        if (id.equals(condutor.getId()) && !this.condutorRepository.findById(id).isEmpty()) {
-            this.condutorRepository.save(condutor);
+        Optional<Condutor> condutorExistente = condutorRepository.findById(id);
+
+        if (condutorExistente.isPresent()) {
+
+            Condutor condutorAtualizado = condutorExistente.get();
+
+
+            condutorService.atualizarCondutor(condutorAtualizado.getId(), condutor);
+
+            return ResponseEntity.ok().body("Registro atualizado com sucesso");
         } else {
-            return ResponseEntity.badRequest().body("Id nao foi encontrado");
+
+            return ResponseEntity.badRequest().body("ID não encontrado");
         }
-        return ResponseEntity.ok().body("Registro atualizado com sucesso");
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletar(@PathVariable final Long id) {
@@ -71,7 +86,7 @@ public class CondutorController {
             Condutor condutor = optionalCondutor.get();
             Movimentacao movimentacao = condutor.getMovimentacao();
 
-            if (movimentacao.isAtivo()) {
+            if (condutor.isAtivo()) {
                 condutorRepository.delete(condutor);
                 return ResponseEntity.ok().body("O registro do condutor foi deletado com sucesso");
             } else {
