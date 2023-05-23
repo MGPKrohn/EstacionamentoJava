@@ -30,7 +30,7 @@ public class MovimentacaoController {
         return ResponseEntity.ok().body(this.movimentacaoRepository.findById(id));
     }
 
-    @GetMapping("/{ativo}")
+    @GetMapping("/ativo/{ativo}")
     public ResponseEntity<?> findByAtivo(@PathVariable boolean ativo){
         List<Movimentacao> movimentacaos = this.movimentacaoRepository.findByAtivo(ativo);
 

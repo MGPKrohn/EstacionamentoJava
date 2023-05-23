@@ -37,7 +37,7 @@ public class ModeloController {
         return ResponseEntity.ok().body(this.modeloRepository.findById(id));
     }
 
-    @GetMapping("/{ativo}")
+    @GetMapping("/ativo/{ativo}")
     public ResponseEntity<?> findByAtivo(@PathVariable boolean ativo){
         List<Modelo> modelos = this.modeloRepository.findByAtivo(ativo);
 

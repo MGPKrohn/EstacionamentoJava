@@ -33,7 +33,7 @@ public class MarcaController {
         return ResponseEntity.ok().body(this.marcaRepository.findById(id).orElse(new Marca()));
     }
 
-    @GetMapping("/{ativo}")
+    @GetMapping("/ativo/{ativo}")
     public ResponseEntity<?> findByAtivo(@PathVariable boolean ativo){
         List<Marca> marcas = this.marcaRepository.findByAtivo(ativo);
 
